@@ -47,7 +47,7 @@ The project operates on **Sonic Blaze Testnet** and includes the following four 
 
 ## Project Links
 
-- **GitHub Repository**: [Link](https://github.com/)
+- **GitHub Repository**: [Link](https://github.com/ThisIsVedant/Decentralized-Autonomous-Twitter-Agent)
 - **X/Twitter API Docs**: [Docs](https://developer.x.com/en/docs/x-api)
 - **ZerePy Docs**: [Docs](https://www.zerepy.org/docs/intro)
 - **Stability AI**: [Docs](https://platform.stability.ai/)
