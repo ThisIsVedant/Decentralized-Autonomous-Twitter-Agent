@@ -1,16 +1,25 @@
 import os
 import time
+
+from dotenv import load_dotenv
+
 from src.action_handler import register_action
 from src.helpers import print_h_bar
 from src.prompts import POST_TWEET_PROMPT, REPLY_TWEET_PROMPT
 import requests
 
+load_dotenv()
 api_key = os.getenv("STABILITY_AI_API_KEY")
+
+# Check if API key is loaded
+if not api_key:
+    raise ValueError("API key is missing. Ensure STABILITY_AI_API_KEY is set in the .env file.")
+
 def generate_image(prompt: str, output_path: str):
     response = requests.post(
         f"https://api.stability.ai/v2beta/stable-image/generate/ultra",
         headers={
-            "authorization": f"Bearer sk-UwDsWdVyhCCIPZQ36mLP5dPgVG33FjHxhZ8emn0SthHfu6p3",
+            "authorization": f"Bearer {api_key}",
             "accept": "image/*"
         },
         files={"none": ''},

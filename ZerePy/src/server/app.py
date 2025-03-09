@@ -6,14 +6,12 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 import logging
 import asyncio
-import signal
 import threading
 from pathlib import Path
 
 from src.actions.twitter_actions import generate_image
 from src.prompts import POST_TWEET_PROMPT, REPLY_TWEET_PROMPT
 
-import src.connections.ollama_connection
 from src.cli import ZerePyCLI
 
 logging.basicConfig(level=logging.INFO)
@@ -272,9 +270,8 @@ class ZerePyServer:
 
             tweet_connection = agent.connection_manager.connections.get("twitter")
             timeline_data = tweet_connection.read_timeline(count=1)
-            print(timeline_data)
+            agent.logger.info(timeline_data)
             tweet_id = timeline_data[0]["id"] if timeline_data else ""
-            print(tweet_id)
 
             if timeline_data:
                 if not tweet_id:
@@ -286,7 +283,7 @@ class ZerePyServer:
                     params=[tweet_id]
                 )
                 agent.logger.info("✅ Tweet liked successfully!")
-                return {"status": "success", "message": "Tweet liked successfully!", "result": timeline_data}
+                return {"status": "success", "message": "Tweet liked successfully!", "timeline": timeline_data}
             else:
                 agent.logger.info("\n👀 No tweets found to like...")
             return False
@@ -310,10 +307,10 @@ class ZerePyServer:
 
             # Use the prompt from the frontend
             prompt = request.prompt
-            print(prompt)
+            agent.logger.info(f"user prompt: {prompt}")
             connection = self.state.cli.agent.connection_manager.connections.get("ollama")
             tweet_text = connection.generate_text(prompt=prompt, system_prompt=POST_TWEET_PROMPT)
-            print(tweet_text)
+            agent.logger.info(f"tweet text: {tweet_text}")
 
             if not tweet_text:
                 raise HTTPException(status_code=400, detail="Tweet generation failed")
@@ -331,7 +328,7 @@ class ZerePyServer:
             # Update last tweet time
             agent.state["last_tweet_time"] = current_time
 
-            return {"status": "success", "message": "Tweet posted successfully!", "result": result}
+            return {"status": "success", "message": "Tweet posted successfully!", "result": result, "tweetText": tweet_text}
 
         @app.post("/agent/reply-to-tweet")
         async def reply_to_tweet():
@@ -342,19 +339,20 @@ class ZerePyServer:
             if not agent:
                 raise HTTPException(status_code=400, detail="No agent loaded")
 
-            tweet_connection = agent.connection_manager.connections.get("twitter")
-            timeline_data = tweet_connection.read_timeline(count=1)
-            print(timeline_data)
-            tweet_id = timeline_data[0]["id"] if timeline_data else ""
-            print(tweet_id)
+            # tweet_connection = agent.connection_manager.connections.get("twitter")
+            # timeline_data = tweet_connection.read_timeline(count=1)
+            # agent.logger.info(f"timeline: {timeline_data}")
+            # tweet_id = timeline_data[0]["id"] if timeline_data else ""
+            # agent.logger.info(f"Tweet id: {tweet_id}")
 
+            timeline_data = [{'id': '1898512735530553766', 'text': 'RT @tesla_na: The future is golden and bright', 'author_id': '44196397', 'created_at': '2025-03-08T23:14:43.000Z', 'edit_history_tweet_ids': ['1898512735530553766'], 'author_name': 'Elon Musk', 'author_username': 'elonmusk'}]
+            tweet_id = timeline_data[0]["id"]
             if timeline_data:
                 if not tweet_id:
                     return
 
-                # agent.logger.info(f"\n💬 GENERATING REPLY to: {timeline_data.get('text', '')[:50]}...")
                 connection = self.state.cli.agent.connection_manager.connections.get("ollama")
-                base_prompt = REPLY_TWEET_PROMPT.format(tweet_text=timeline_data.get('text'))
+                base_prompt = REPLY_TWEET_PROMPT.format(tweet_text=timeline_data[0]['text'])
                 system_prompt = agent._construct_system_prompt()
                 reply_text = connection.generate_text(prompt=base_prompt, system_prompt=system_prompt)
 
@@ -366,7 +364,7 @@ class ZerePyServer:
                         params=[tweet_id, reply_text]
                     )
                     agent.logger.info("✅ Reply posted successfully!")
-                return {"status": "success", "message": "Tweet Reply successfully!", "result": timeline_data, "reply-text" : reply_text}
+                return {"status": "success", "message": "Tweet Reply successfully!", "timeline": timeline_data, "replyText" : reply_text}
 
             else:
                 agent.logger.info("\n👀 No tweets found to reply to...")
@@ -393,18 +391,17 @@ class ZerePyServer:
 
 
                 # Generate tweet text
-                prompted = request.prompt
-                print(prompted)
+                prompt = request.prompt
+                agent.logger.info(f"user prompt: {prompt}")
                 connection = agent.connection_manager.connections.get("ollama")
-                tweet_text = connection.generate_text(prompt=prompted, system_prompt=POST_TWEET_PROMPT)
-                print(tweet_text)
+                tweet_text = connection.generate_text(prompt=prompt, system_prompt=POST_TWEET_PROMPT)
+                agent.logger.info(f"tweet text: {tweet_text}")
 
                 # Generate image using Stable Diffusion
                 # Usage in tweet posting function
                 try:
                     agent.logger.info("\n🎨 Generating image with Stable Diffusion...")
-                    prompt = "Astronaut in a jungle, cold color palette, muted colors, detailed, 8k"
-                    image_path = generate_image(prompted, "./generated_image.jpeg")
+                    image_path = generate_image(prompt, "./generated_image.jpeg")
                     agent.logger.info(f"\n📷 Image generated and saved to: {image_path}")
                 except Exception as e:
                     agent.logger.error(f"\n❌ Failed to generate image: {e}")
@@ -422,7 +419,7 @@ class ZerePyServer:
                     )
                     agent.state["last_tweet_time"] = current_time
                     agent.logger.info("\n✅ Tweet with image posted successfully!")
-                    return {"status": "success", "message": "Tweet posted successfully!", "result": result}
+                    return {"status": "success", "message": "Tweet posted successfully!","result": result, "tweetText": tweet_text}
                 else:
                     agent.logger.error("\n❌ Failed to generate tweet or image.")
                     return False

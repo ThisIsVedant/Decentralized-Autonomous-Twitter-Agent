@@ -1,5 +1,9 @@
 # Decentralized Autonomous Twitter Agent
 
+**Watch the Demo** 
+
+![youtube](https://youtu.be/6SYgVZ19Zlg)
+
 ## Introduction
 
 This project leverages the Web3 ecosystem, utilizing **Sonic** and **ZerePy** to create an autonomous AI agent for X/Twitter actions. By integrating with the **Sonic blockchain ecosystem**, the project ensures decentralization and alignment with the platform's infrastructure and mission. Additionally, **ZerePy** enables custom AI agent actions, including Sonic transactions, Ollama-based AI actions, and Twitter automation.
@@ -133,11 +137,13 @@ You can update the **contract address** and **Sonic transaction amount** directl
 
 ## Future Enhancements
 
-- **Automated Agent Scheduling** → Ability to schedule tweets and interactions at specific times.
-- **Advanced AI Content Generation** → Improve tweet quality using enhanced **Ollama AI models**.
-- **Sentiment Analysis** → Analyze tweet sentiment before posting.
-- **User-Customizable Prompts** → Allow users to personalize tweet prompts.
-- **Multi-Chain Support** → Expand support for other blockchain networks beyond **Sonic**.
+- **Automated Agent Scheduling** → Ability to schedule tweets and interactions at specific times.  
+- **Advanced AI Content Generation** → Improve tweet quality using enhanced **Ollama AI** models.  
+- **Sentiment Analysis** → Analyze tweet sentiment before posting.  
+- **Multi-Chain Support** → Expand support for other blockchain networks beyond **Sonic**.  
+- **Support for More AI Models** → Enable integration with additional AI models for better content generation.  
+- **Multi-Platform Support** → Extend agent capabilities to multiple social media platforms beyond **X/Twitter**.  
+- **More Decentralized Execution Features** → Enhance on-chain automation and execution for improved decentralization.  
 
 ## Conclusion
 

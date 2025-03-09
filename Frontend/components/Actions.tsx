@@ -52,6 +52,7 @@ export default function Actions({ setLogs }: { setLogs: React.Dispatch<React.Set
         try {
             if(isRunning) {
                 const data = await postTweet(prompt);
+                setLogs((prev) => [...prev, `${data.tweetText}`]);
                 setLogs((prev) => [...prev, `${data.message}`]);
             } else {
                 setLogs((prev) => [...prev, "Agent not started!"]);
@@ -69,6 +70,7 @@ export default function Actions({ setLogs }: { setLogs: React.Dispatch<React.Set
         try {
             if(isRunning) {
                 const data = await postTweetWithImage(prompt);
+                setLogs((prev) => [...prev, `${data.tweetText}`]);
                 setLogs((prev) => [...prev, `${data.message}`]);
             } else {
                 setLogs((prev) => [...prev, "Agent not started!"]);
@@ -86,6 +88,8 @@ export default function Actions({ setLogs }: { setLogs: React.Dispatch<React.Set
         try {
             if(isRunning) {
                 const data = await replyTweet();
+                setLogs((prev) => [...prev, `${JSON.stringify(data.timeline)}`]);
+                setLogs((prev) => [...prev, `${data.replyText}`]);
                 setLogs((prev) => [...prev, `${data.message}`]);
             } else {
             setLogs((prev) => [...prev, "Agent not started!"]);
@@ -103,6 +107,7 @@ export default function Actions({ setLogs }: { setLogs: React.Dispatch<React.Set
         try {
             if(isRunning) {
                 const data = await likeTweet();
+                setLogs((prev) => [...prev, `${JSON.stringify(data.timeline)}`]);
                 setLogs((prev) => [...prev, `${data.message}`]);
             } else {
                 setLogs((prev) => [...prev, "Agent not started!"]);
