@@ -75,20 +75,20 @@ Navigate to the **ZerePy** folder and run:
 ### 3. Ollama Setup
 
 Start Ollama and Install an LLM Model
-Before running the backend, start Ollama by executing the following command:
+
+**Note:** Ensure you have Ollama installed. If not, install it from [Ollama's website](https://ollama.ai).
+
+After installing Ollama, you need to install a large language model before using it. To use this project, you must install the llama3.2 model:
+
+```sh
+ ollama pull llama3.2
+```
+
+Before running the backend, start the Ollama software or start Ollama by executing the following command:
 
 ```sh
  ollama serve
 ```
-
-**Note:** Ensure you have Ollama installed. If not, install it from [Ollama's website](https://ollama.ai).
-
-After installing Ollama, you need to install a large language model before using it. For example, to install Llama 3, run:
-
-```sh
- ollama pull llama3
-```
-
 
 ### 4. Configure Environment Variables
 
