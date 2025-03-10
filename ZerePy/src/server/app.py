@@ -339,14 +339,12 @@ class ZerePyServer:
             if not agent:
                 raise HTTPException(status_code=400, detail="No agent loaded")
 
-            # tweet_connection = agent.connection_manager.connections.get("twitter")
-            # timeline_data = tweet_connection.read_timeline(count=1)
-            # agent.logger.info(f"timeline: {timeline_data}")
-            # tweet_id = timeline_data[0]["id"] if timeline_data else ""
-            # agent.logger.info(f"Tweet id: {tweet_id}")
+            tweet_connection = agent.connection_manager.connections.get("twitter")
+            timeline_data = tweet_connection.read_timeline(count=1)
+            agent.logger.info(f"timeline: {timeline_data}")
+            tweet_id = timeline_data[0]["id"] if timeline_data else ""
+            agent.logger.info(f"Tweet id: {tweet_id}")
 
-            timeline_data = [{'id': '1898512735530553766', 'text': 'RT @tesla_na: The future is golden and bright', 'author_id': '44196397', 'created_at': '2025-03-08T23:14:43.000Z', 'edit_history_tweet_ids': ['1898512735530553766'], 'author_name': 'Elon Musk', 'author_username': 'elonmusk'}]
-            tweet_id = timeline_data[0]["id"]
             if timeline_data:
                 if not tweet_id:
                     return
