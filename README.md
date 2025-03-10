@@ -61,7 +61,7 @@ Follow these steps to set up and run the agents:
 ### 1. Clone the Repository
 
 ```bash
- git clone https://github.com/
+ git clone https://github.com/ThisIsVedant/Decentralized-Autonomous-Twitter-Agent
 ```
 
 ### 2. Install Dependencies
